@@ -10,6 +10,7 @@ To use Blooker, please make sure you have the following requirements installed:
 - python3-dev
 - libffi-dev
 - libssl-dev
+- iputils-ping
 
 You can install the required packages by running the following command:
 
