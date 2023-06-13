@@ -1,38 +1,45 @@
-Blooker
-Blooker is a versatile network information tool built for network scanning, interface listing, IP pinging, tracerouting, and Bluetooth device scanning. It provides a command-line interface and leverages Python subprocess calls, Nmap, and Bluetooth utilities. Blooker helps gather network details, troubleshoot issues, and explore connected devices.
+# Blooker
 
-Features
-Network scanning to discover hosts and open ports
-Interface listing to view available network interfaces
-IP pinging to check the reachability of a specific IP address
-Tracerouting to trace the path taken by packets to a destination
-Bluetooth device scanning to discover nearby devices
-Installation
-To install and use Blooker, follow these steps:
+Blooker is a network information tool for scanning networks, listing interfaces, pinging IPs, performing traceroutes, and scanning Bluetooth devices. It offers a command-line interface and utilizes Python subprocess calls, Nmap, and Bluetooth utilities. Blooker helps gather network details, troubleshoot network issues, and explore connected devices.
 
-Clone the Blooker repository: git clone https://github.com/mrfunnyman583/blooker.git
-Navigate to the project directory: cd blooker
-Install the required packages: pip install -r requirements.txt
-Usage
-To run Blooker, use the following command: python blooker.py [command] [options]
+## Installation
 
+To use Blooker, please make sure you have the following requirements installed:
+
+- Python 3.6+
+- python3-dev
+- libffi-dev
+- libssl-dev
+
+You can install the required packages by running the following command:
+
+pip install -r requirements.txt 
+## Usage
+
+Once you have installed the required packages, you can run Blooker using the following command:
+python3 blooker5.py [command] [options] 
 Available commands:
 
-start: Start the scanning process and prompt for a network creator's MAC address
-interfaces: List available network interfaces
-info [interface]: Get detailed information about a specific network interface
-scan: Perform a network scan
-ping [ip_address]: Ping a specific IP address
-traceroute [destination]: Perform a traceroute to a specific destination
-bluetooth: View Bluetooth devices
-bluetooth-scan: Scan for nearby Bluetooth devices
-For more details on each command and their options, run python blooker.py --help.
+- `start`: Start the scanning process and prompt for a network creator's MAC address.
+- `interfaces`: List available network interfaces.
+- `info [interface]`: Get detailed information about a specific network interface.
+- `scan`: Perform a network scan.
+- `ping [ip_address]`: Ping a specific IP address.
+- `traceroute [destination]`: Perform a traceroute to a specific destination.
+- `bluetooth`: View Bluetooth devices.
+- `bluetooth-scan`: Scan for nearby Bluetooth devices.
+- `help`: Display the help message.
 
-Contributions
-Contributions to Blooker are welcome! Feel free to submit bug reports, suggest new features, or contribute code through pull requests.
+For example, to start the scanning process, you can use:
 
-License
-Blooker is licensed under the MIT License. See the LICENSE file for more details.
+python3 blooker5.py start 
+For more information and detailed usage instructions, please refer to the help message provided by the `help` command.
 
-Disclaimer
-Use Blooker responsibly and respect applicable laws and regulations. The authors and contributors of Blooker are not responsible for any misuse or damages caused by its usage.
+## Contributing
+
+Contributions to Blooker are welcome! If you have any suggestions, bug reports, or feature requests, please feel free to open an issue or submit a pull request on the GitHub repository.
+
+## License
+
+Blooker is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
+
