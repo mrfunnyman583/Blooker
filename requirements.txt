@@ -1,0 +1,5 @@
+Python 3.6+
+python3-dev
+libffi-dev
+libssl-dev
+iputils-ping
