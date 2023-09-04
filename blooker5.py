@@ -1,37 +1,32 @@
 import subprocess
 import sys
 
-REQUIRED_PACKAGES = ['python3-pip', 'python3-dev', 'libffi-dev', 'libssl-dev']  # Add your required packages here
+REQUIRED_PACKAGES = ['python3-pip', 'python3-dev', 'libffi-dev', 'libssl-dev']
 
 def check_packages():
-    missing_packages = []
-
-    for package in REQUIRED_PACKAGES:
-        try:
-            subprocess.check_output(f"dpkg -s {package}", shell=True)
-        except subprocess.CalledProcessError:
-            missing_packages.append(package)
-
+    missing_packages = [package for package in REQUIRED_PACKAGES if not is_package_installed(package)]
     return missing_packages
+
+def is_package_installed(package):
+    try:
+        subprocess.check_output(f"dpkg -s {package}", shell=True)
+        return True
+    except subprocess.CalledProcessError:
+        return False
 
 def display_reminder():
     missing_packages = check_packages()
 
     if missing_packages:
-        print("Please install the following packages to use blooker:")
+        print("Please install the following packages to use Blooker:")
         print('\n'.join(missing_packages))
     else:
-        print("All required packages are installed. You can use blooker.")
+        print("All required packages are installed. You can use Blooker.")
 
 def get_network_interfaces():
     cmd = "ip link show"
     output = subprocess.check_output(cmd, shell=True).decode()
-    interfaces = []
-
-    for line in output.split('\n'):
-        if line.strip().startswith(""):
-            interface = line.split(':')[1].strip()
-            interfaces.append(interface)
+    interfaces = [line.split(':')[1].strip() for line in output.split('\n') if line.strip().startswith("")]
 
     return interfaces
 
@@ -39,18 +34,16 @@ def get_network_info(interface):
     cmd = f"ip addr show {interface}"
     output = subprocess.check_output(cmd, shell=True).decode()
 
-    ip_address = output.split("inet ")[1].split("/")[0].strip()
+    parts = output.split("inet ")[1].split("/")
+    ip_address = parts[0].strip()
+    subnet = parts[1].split(" brd")[0].strip()
     mac_address = output.split("link/ether ")[1].split(" ")[0].strip()
-    subnet = output.split("inet ")[1].split(" brd")[0].split("/")[1].strip()
 
     return ip_address, mac_address, subnet
 
 def get_network_creator(mac_address):
-    interfaces = get_network_interfaces()
-
-    for interface in interfaces:
+    for interface in get_network_interfaces():
         _, mac, _ = get_network_info(interface)
-
         if mac.lower() == mac_address.lower():
             return interface
 
@@ -119,30 +112,23 @@ def scan_bluetooth_devices():
 
 def main():
     if len(sys.argv) > 1:
-        if sys.argv[1] == "start":
+        command = sys.argv[1]
+
+        if command == "start":
             start_scanning()
-        elif sys.argv[1] == "interfaces":
+        elif command == "interfaces":
             list_interfaces()
-        elif sys.argv[1] == "info":
-            if len(sys.argv) == 3:
-                get_interface_info(sys.argv[2])
-            else:
-                print("Invalid command. Please specify a network interface.")
-        elif sys.argv[1] == "scan":
+        elif command == "info" and len(sys.argv) == 3:
+            get_interface_info(sys.argv[2])
+        elif command == "scan":
             scan_network()
-        elif sys.argv[1] == "ping":
-            if len(sys.argv) == 3:
-                ping_ip(sys.argv[2])
-            else:
-                print("Invalid command. Please specify an IP address.")
-        elif sys.argv[1] == "traceroute":
-            if len(sys.argv) == 3:
-                traceroute(sys.argv[2])
-            else:
-                print("Invalid command. Please specify a destination.")
-        elif sys.argv[1] == "bluetooth":
+        elif command == "ping" and len(sys.argv) == 3:
+            ping_ip(sys.argv[2])
+        elif command == "traceroute" and len(sys.argv) == 3:
+            traceroute(sys.argv[2])
+        elif command == "bluetooth":
             view_bluetooth_devices()
-        elif sys.argv[1] == "bluetooth-scan":
+        elif command == "bluetooth-scan":
             scan_bluetooth_devices()
         else:
             display_blooker_help()
