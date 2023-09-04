@@ -26,7 +26,7 @@ def display_reminder():
 def get_network_interfaces():
     cmd = "ip link show"
     output = subprocess.check_output(cmd, shell=True).decode()
-    interfaces = [line.split(':')[1].strip() for line in output.split('\n') if line.strip().startswith("")]
+    interfaces = [line.split(':')[1].strip() for line in output.split('\n') if line.strip().startswith(" ")]
 
     return interfaces
 
@@ -140,6 +140,6 @@ if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        print("\nBlooker terminated by user.")
+        print("\nBlooker terminated by the user.")
     except Exception as e:
         print(f"An error occurred: {e}")
