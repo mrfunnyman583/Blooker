@@ -9,7 +9,7 @@ def check_packages():
 
 def is_package_installed(package):
     try:
-        subprocess.check_output(f"dpkg -s {package}", shell=True)
+        subprocess.check_output(['dpkg', '-s', package])
         return True
     except subprocess.CalledProcessError:
         return False
@@ -20,26 +20,30 @@ def display_reminder():
     if missing_packages:
         print("Please install the following packages to use Blooker:")
         print('\n'.join(missing_packages))
+        sys.exit(1)  # Exit the program with an error code
     else:
         print("All required packages are installed. You can use Blooker.")
 
 def get_network_interfaces():
-    cmd = "ip link show"
-    output = subprocess.check_output(cmd, shell=True).decode()
-    interfaces = [line.split(':')[1].strip() for line in output.split('\n') if line.strip().startswith(" ")]
-
-    return interfaces
+    try:
+        output = subprocess.check_output(['ip', 'link', 'show']).decode()
+        interfaces = [line.split(':')[1].strip() for line in output.split('\n') if line.strip().startswith(" ")]
+        return interfaces
+    except subprocess.CalledProcessError:
+        print("Error retrieving network interfaces.")
+        sys.exit(1)
 
 def get_network_info(interface):
-    cmd = f"ip addr show {interface}"
-    output = subprocess.check_output(cmd, shell=True).decode()
-
-    parts = output.split("inet ")[1].split("/")
-    ip_address = parts[0].strip()
-    subnet = parts[1].split(" brd")[0].strip()
-    mac_address = output.split("link/ether ")[1].split(" ")[0].strip()
-
-    return ip_address, mac_address, subnet
+    try:
+        output = subprocess.check_output(['ip', 'addr', 'show', interface]).decode()
+        parts = output.split("inet ")[1].split("/")
+        ip_address = parts[0].strip()
+        subnet = parts[1].split(" brd")[0].strip()
+        mac_address = output.split("link/ether ")[1].split(" ")[0].strip()
+        return ip_address, mac_address, subnet
+    except subprocess.CalledProcessError:
+        print(f"Error retrieving information for interface {interface}.")
+        sys.exit(1)
 
 def get_network_creator(mac_address):
     for interface in get_network_interfaces():
@@ -86,29 +90,49 @@ def get_interface_info(interface):
     print(f"Subnet: {subnet}")
 
 def scan_network():
-    cmd = "nmap -sn 192.168.1.0/24"  # Update the IP range as per your network configuration
-    output = subprocess.check_output(cmd, shell=True).decode()
-    print(output)
+    try:
+        cmd = ["nmap", "-sn", "192.168.1.0/24"]  # Update the IP range as per your network configuration
+        output = subprocess.check_output(cmd).decode()
+        print(output)
+    except subprocess.CalledProcessError:
+        print("Error scanning the network.")
+        sys.exit(1)
 
 def ping_ip(ip_address):
-    cmd = f"ping -c 4 {ip_address}"
-    output = subprocess.check_output(cmd, shell=True).decode()
-    print(output)
+    try:
+        cmd = ["ping", "-c", "4", ip_address]
+        output = subprocess.check_output(cmd).decode()
+        print(output)
+    except subprocess.CalledProcessError:
+        print(f"Error pinging IP address {ip_address}.")
+        sys.exit(1)
 
 def traceroute(destination):
-    cmd = f"traceroute {destination}"
-    output = subprocess.check_output(cmd, shell=True).decode()
-    print(output)
+    try:
+        cmd = ["traceroute", destination]
+        output = subprocess.check_output(cmd).decode()
+        print(output)
+    except subprocess.CalledProcessError:
+        print(f"Error performing traceroute to {destination}.")
+        sys.exit(1)
 
 def view_bluetooth_devices():
-    cmd = "hcitool dev"
-    output = subprocess.check_output(cmd, shell=True).decode()
-    print(output)
+    try:
+        cmd = ["hcitool", "dev"]
+        output = subprocess.check_output(cmd).decode()
+        print(output)
+    except subprocess.CalledProcessError:
+        print("Error viewing Bluetooth devices.")
+        sys.exit(1)
 
 def scan_bluetooth_devices():
-    cmd = "hcitool scan"
-    output = subprocess.check_output(cmd, shell=True).decode()
-    print(output)
+    try:
+        cmd = ["hcitool", "scan"]
+        output = subprocess.check_output(cmd).decode()
+        print(output)
+    except subprocess.CalledProcessError:
+        print("Error scanning for Bluetooth devices.")
+        sys.exit(1)
 
 def main():
     if len(sys.argv) > 1:
