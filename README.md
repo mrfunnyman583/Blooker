@@ -14,7 +14,7 @@ To use Blooker, please make sure you have the following requirements installed:
 
 You can install the required packages by running the following command:
 
-pip install -r requirements.txt (Also i added bluetooth features, as it not metioned here but if u want to use them, Just install hcitool and bluez!! also u need a device for bluetooth devices that supports lsusb! so just a little disclamier...)
+pip install -r requirements.txt (Also i added bluetooth features make sure you have hcitool and blues installed, also a bluetooth monitor thingy that supports lsusb idk)
 ## Usage
 
 Once you have installed the required packages, you can run Blooker using the following command:
